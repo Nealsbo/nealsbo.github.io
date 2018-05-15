@@ -42,12 +42,18 @@ function init(){
 	scene.add( spotLight );
 	scene.add( light );
 	scene.add( camera );
-
-	var texture = new THREE.TextureLoader().load( 'data/sphere/sphere.jpg' );
+	
+	var objLoader = new THREE.OBJLoader();
+	var texture = new THREE.TextureLoader().load( 'data/monkey/monkey.jpg' );
 	var material = new THREE.MeshPhongMaterial( { map: texture, specular: 0xffffff, shininess: 8, flatShading: false }  );
-	var geometry = new THREE.SphereGeometry( 1, 32, 32 );	
-	cube = new THREE.Mesh( geometry, material );
-	scene.add( cube );
+	objLoader.load('data/monkey/monkey.obj', function (obj) {
+		obj.traverse(function (child) {
+			if (child instanceof THREE.Mesh) {
+			child.material = material;
+			}
+		});
+		scene.add(obj);
+	});
 	
 	window.addEventListener( 'resize', onWindowResize, false );
 };
