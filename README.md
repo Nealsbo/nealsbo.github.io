@@ -1,2 +1,0 @@
-# nealsbo.github.io
-WebGLRenderer
