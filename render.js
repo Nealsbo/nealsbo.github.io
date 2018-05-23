@@ -2,6 +2,8 @@ var scene, camera, renderer, controls;
 var ambient, spotLight, light;
 var cube;
 
+var nameOfObject = "cat"
+
 init();
 animate();
 
@@ -10,7 +12,7 @@ function init(){
 	renderer = new THREE.WebGLRenderer();
 
 	camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-	camera.position.set( 0, 0, 3 );
+	camera.position.set( 0, 1, 4 );
 
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	document.body.appendChild( renderer.domElement );
@@ -18,24 +20,24 @@ function init(){
 	scene.background = new THREE.Color( 0xffffff );
 
 	controls = new THREE.OrbitControls( camera );
-	controls.target.set( 0, 0, 0 );
+	controls.target.set( 0, 1, 0 );
 	controls.update();
 
 	ambient = new THREE.AmbientLight( 0xffffff, 0.5 );
 
 	spotLight = new THREE.SpotLight( 0xffffff, 1 );
-	spotLight.position.set( 0, 10, 0);
+	spotLight.position.set( 0, 30, 0);
 	spotLight.angle = Math.PI / 4;
 	spotLight.penumbra = 0.05;
 	spotLight.decay = 2;
-	spotLight.distance = 50;
+	spotLight.distance = 75;
 	spotLight.castShadow = false;
 	spotLight.shadow.mapSize.width = 512;
 	spotLight.shadow.mapSize.height = 512;
 	spotLight.shadow.camera.near = 2;
 	spotLight.shadow.camera.far = 20;
 
-	light = new THREE.PointLight( 0xff0000, 1, 0 );
+	light = new THREE.PointLight( 0xffffaa, 0.2, 0 );
 	light.position.set( 10, 0,  0 );
 	
 	scene.add( ambient );
@@ -44,9 +46,9 @@ function init(){
 	scene.add( camera );
 	
 	var objLoader = new THREE.OBJLoader();
-	var texture = new THREE.TextureLoader().load( 'data/monkey/monkey.jpg' );
+	var texture = new THREE.TextureLoader().load( 'data/cat/cat.jpg' );
 	var material = new THREE.MeshPhongMaterial( { map: texture, specular: 0xffffff, shininess: 8, flatShading: false }  );
-	objLoader.load('data/monkey/monkey.obj', function (obj) {
+	objLoader.load('data/cat/cat.obj', function (obj) {
 		obj.traverse(function (child) {
 			if (child instanceof THREE.Mesh) {
 			child.material = material;
