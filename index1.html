@@ -5,19 +5,28 @@
 			body {
 				color: #808080;
 				font-family:Monospace;
-				font-size:24px;
+				font-size:32px;
 				text-align:center;
 				background-color: #fff;
 				margin: 0px;
 				overflow: hidden;
+			}
+			.button {
+				color: white;
+				background-color: #555555;
+				border-radius: 50%;
+				padding: 12px 24px;
+				text-align: center;
+				display: inline-block;
+				font-size: 28px;
 			}
 			canvas { width: 100%; height: 100% }
 		</style>
 	</head>
 	<body>
 		<div id="body">
-			<a href="index.html">Cat</a>
-			<a href="index1.html">Box</a>
+			<button class="button" onclick="location.href='index.html'" type="button">Cat</button>
+			<button class="button" onclick="location.href='index1.html'" type="button">Box</button>
 		</div>
 
 		<script src="js/three.min.js"></script>

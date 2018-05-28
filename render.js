@@ -7,9 +7,6 @@ var objectFormat = ".obj";
 var materialFormat = ".mtl";
 var textureFormat = ".jpg";
 
-init();
-animate();
-
 function init(){
 	scene = new THREE.Scene();
 	renderer = new THREE.WebGLRenderer();
@@ -79,3 +76,6 @@ function animate() {
 
 	renderer.render(scene, camera);
 };
+
+init();
+animate();
