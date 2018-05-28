@@ -2,7 +2,7 @@ var scene, camera, renderer, controls;
 var ambient, spotLight, light;
 var cube;
 
-var nameOfObject = "cat";
+var nameOfObject = "box";
 var objectFormat = ".obj";
 var materialFormat = ".mtl";
 var textureFormat = ".jpg";
@@ -15,7 +15,7 @@ function init(){
 	renderer = new THREE.WebGLRenderer();
 
 	camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-	camera.position.set( 0, 1, 5 );
+	camera.position.set( 0, 0, 4 );
 
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	document.body.appendChild( renderer.domElement );
@@ -23,7 +23,7 @@ function init(){
 	scene.background = new THREE.Color( 0xffffff );
 
 	controls = new THREE.OrbitControls( camera );
-	controls.target.set( 0, 1, 0 );
+	controls.target.set( 0, 0, 0 );
 	controls.update();
 
 	ambient = new THREE.AmbientLight( 0xffffff, 0.5 );
