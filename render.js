@@ -2,30 +2,30 @@ var scene, camera, renderer, controls;
 var ambient, spotLight, light;
 var cube;
 
-var nameOfObject = "cat";
 var objectFormat = ".obj";
 var materialFormat = ".mtl";
 var textureFormat = ".jpg";
 
 function init(){
 	scene = new THREE.Scene();
+	scene.background = new THREE.Color( 0xffffff );
 	renderer = new THREE.WebGLRenderer();
 
 	camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-	camera.position.set( 0, 1, 5 );
+	camera.position.set( 0, 0, 5 );
 
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	document.body.appendChild( renderer.domElement );
 
-	scene.background = new THREE.Color( 0xffffff );
-
 	controls = new THREE.OrbitControls( camera );
-	controls.target.set( 0, 1, 0 );
+	controls.target.set( 0, 0, 0 );
 	controls.update();
 
 	ambient = new THREE.AmbientLight( 0xffffff, 0.5 );
+	ambient.name = 'ambientLight';
 
 	spotLight = new THREE.SpotLight( 0xffffff, 1 );
+	spotLight.name = 'spotLight';
 	spotLight.position.set( 0, 30, 0);
 	spotLight.angle = Math.PI / 4;
 	spotLight.penumbra = 0.05;
@@ -45,7 +45,27 @@ function init(){
 	scene.add( light );
 	scene.add( camera );
 
-	var objectsDir = "data/".concat(nameOfObject, "/", nameOfObject);
+	loadModel("cat");
+
+	window.addEventListener( 'resize', onWindowResize, false );
+};
+
+function onWindowResize() {
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+	renderer.setSize( window.innerWidth, window.innerHeight );
+}
+
+function animate() {
+	requestAnimationFrame( animate );
+
+	renderer.render(scene, camera);
+};
+
+function loadModel(modelName){
+	clearScene();
+
+	var objectsDir = "data/".concat(modelName, "/", modelName);
 	var modelDir = objectsDir.concat(objectFormat);
 	var materialDir = objectsDir.concat(materialFormat);
 	var textureDir = objectsDir.concat(textureFormat);
@@ -61,21 +81,18 @@ function init(){
 		});
 		scene.add(obj);
 	});
-	
-	window.addEventListener( 'resize', onWindowResize, false );
-};
-
-function onWindowResize() {
-	camera.aspect = window.innerWidth / window.innerHeight;
-	camera.updateProjectionMatrix();
-	renderer.setSize( window.innerWidth, window.innerHeight );
 }
 
-function animate() {
-	requestAnimationFrame( animate );
-
-	renderer.render(scene, camera);
-};
+function clearScene() {
+	var numOfElems = scene.children.length;
+	for(var i = numOfElems - 1; i > 0; i--){
+		if(scene.children [ i ].name != 'camera' &&
+			scene.children [ i ].name != 'ambientLight' &&
+			scene.children [ i ].name != 'spotLight'){
+			scene.remove(scene.children [ i ]);
+		}
+	}
+}
 
 init();
 animate();
