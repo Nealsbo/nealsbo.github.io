@@ -2,9 +2,12 @@ var scene, camera, renderer, controls;
 var ambient, spotLight, light;
 var cube;
 
+var currentModelName;
 var objectFormat = ".obj";
 var materialFormat = ".mtl";
 var textureFormat = ".jpg";
+
+var highlighted = false;
 
 function init(){
 	scene = new THREE.Scene();
@@ -18,6 +21,7 @@ function init(){
 	document.body.appendChild( renderer.domElement );
 
 	controls = new THREE.OrbitControls( camera );
+	controls.enablePan = false;
 	controls.target.set( 0, 0, 0 );
 	controls.update();
 
@@ -64,7 +68,8 @@ function animate() {
 
 function loadModel(modelName){
 	clearScene();
-
+	
+	currentModelName = modelName;
 	var objectsDir = "data/".concat(modelName, "/", modelName);
 	var modelDir = objectsDir.concat(objectFormat);
 	var materialDir = objectsDir.concat(materialFormat);
