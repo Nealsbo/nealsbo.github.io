@@ -3,18 +3,25 @@ var ambient, spotLight, light;
 var cube;
 
 var currentModelName;
+var loadedModel;
 var objectFormat = ".obj";
 var materialFormat = ".mtl";
 var textureFormat = ".jpg";
 
-var highlighted = false;
+var objectsDir;
+var modelDir;
+var materialDir;
+var textureDir;
+
+var highlight = false;
+var transparent = false;
 
 function init(){
 	scene = new THREE.Scene();
 	scene.background = new THREE.Color( 0xffffff );
 	renderer = new THREE.WebGLRenderer();
 
-	camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+	camera = new THREE.PerspectiveCamera( 60, window.innerWidth/window.innerHeight, 0.1, 1000 );
 	camera.position.set( 0, 0, 5 );
 
 	renderer.setSize( window.innerWidth, window.innerHeight );
@@ -23,6 +30,8 @@ function init(){
 	controls = new THREE.OrbitControls( camera );
 	controls.enablePan = false;
 	controls.target.set( 0, 0, 0 );
+	controls.maxDistance = 8;
+	controls.minDistance = 4;
 	controls.update();
 
 	ambient = new THREE.AmbientLight( 0xffffff, 0.5 );
@@ -70,10 +79,10 @@ function loadModel(modelName){
 	clearScene();
 	
 	currentModelName = modelName;
-	var objectsDir = "data/".concat(modelName, "/", modelName);
-	var modelDir = objectsDir.concat(objectFormat);
-	var materialDir = objectsDir.concat(materialFormat);
-	var textureDir = objectsDir.concat(textureFormat);
+	objectsDir = "data/".concat(modelName, "/", modelName);
+	modelDir = objectsDir.concat(objectFormat);
+	materialDir = objectsDir.concat(materialFormat);
+	textureDir = objectsDir.concat(textureFormat);
 
 	var objLoader = new THREE.OBJLoader();
 	var texture = new THREE.TextureLoader().load( textureDir );
@@ -81,7 +90,9 @@ function loadModel(modelName){
 	objLoader.load(modelDir, function (obj) {
 		obj.traverse(function (child) {
 			if (child instanceof THREE.Mesh) {
-			child.material = material;
+				child.material = material;
+				child.material.transparent = true;
+				loadedModel = child;
 			}
 		});
 		scene.add(obj);
@@ -89,6 +100,7 @@ function loadModel(modelName){
 }
 
 function clearScene() {
+	loadedModel = null;
 	var numOfElems = scene.children.length;
 	for(var i = numOfElems - 1; i > 0; i--){
 		if(scene.children [ i ].name != 'camera' &&
@@ -97,6 +109,28 @@ function clearScene() {
 			scene.remove(scene.children [ i ]);
 		}
 	}
+}
+
+function transparentModel(){
+	if(transparent === false){
+		transparent = true;
+		loadedModel.material.opacity = 0.5;
+	} else {
+		transparent = false;
+		loadedModel.material.opacity = 1;
+	}
+	console.log("transparent foo - " + transparent);
+}
+
+function highlightModel(){
+	if(highlight === false){
+		highlight = true;
+		loadedModel.material.emissive.setHex(0xFF0000);
+	} else {
+		highlight = false;
+		loadedModel.material.emissive.setHex(0x000000);
+	}
+	console.log("highlight foo - " + highlight);
 }
 
 init();
