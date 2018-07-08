@@ -3,12 +3,13 @@ var ambient, spotLight, light;
 var cube;
 
 var currentModelName;
-var loadedModel;
-var objectFormat = ".obj";
+var loadedModelObj;
+
+var objectFormat = ".dae";
 var materialFormat = ".mtl";
 var textureFormat = ".jpg";
 
-var objectsDir;
+var assetsDir;
 var modelDir;
 var materialDir;
 var textureDir;
@@ -79,11 +80,12 @@ function loadModel(modelName){
 	clearScene();
 	
 	currentModelName = modelName;
-	objectsDir = "data/".concat(modelName, "/", modelName);
-	modelDir = objectsDir.concat(objectFormat);
-	materialDir = objectsDir.concat(materialFormat);
-	textureDir = objectsDir.concat(textureFormat);
-
+	assetsDir = "data/".concat(modelName, "/", modelName);
+	modelDir = assetsDir.concat(objectFormat);
+	materialDir = assetsDir.concat(materialFormat);
+	textureDir = assetsDir.concat(textureFormat);
+	
+	/*
 	var objLoader = new THREE.OBJLoader();
 	var texture = new THREE.TextureLoader().load( textureDir );
 	var material = new THREE.MeshPhongMaterial( { map: texture, specular: 0xffffff, shininess: 8, flatShading: false }  );
@@ -97,10 +99,30 @@ function loadModel(modelName){
 		});
 		scene.add(obj);
 	});
+	*/
+	
+	var texture = new THREE.TextureLoader().load( textureDir );
+	var material = new THREE.MeshPhongMaterial( { map: texture, specular: 0xffffff, shininess: 8, flatShading: false }  );
+	
+	var loadingManager = new THREE.LoadingManager( function() {
+		scene.add( loadedModelObj );
+	});
+	var loader = new THREE.ColladaLoader( loadingManager );
+	loader.load( modelDir, function ( collada ) {
+		loadedModelObj = collada.scene;
+		loadedModelObj.children[0].material = material;
+		loadedModelObj.children[0].material.transparent = true;
+	});
 }
 
-function clearScene() {
-	loadedModel = null;
+function resetCamera(){
+	controls.reset();
+}
+
+function clearScene(){
+	highlight = false;
+	transparent = false;
+	loadedModelObj = null;
 	var numOfElems = scene.children.length;
 	for(var i = numOfElems - 1; i > 0; i--){
 		if(scene.children [ i ].name != 'camera' &&
@@ -109,28 +131,29 @@ function clearScene() {
 			scene.remove(scene.children [ i ]);
 		}
 	}
+	resetCamera();
 }
 
 function transparentModel(){
 	if(transparent === false){
 		transparent = true;
-		loadedModel.material.opacity = 0.5;
+		loadedModelObj.children[0].material.opacity = 0.5;
 	} else {
 		transparent = false;
-		loadedModel.material.opacity = 1;
+		loadedModelObj.children[0].material.opacity = 1;
 	}
-	console.log("transparent foo - " + transparent);
+	//console.log("transparent foo - " + transparent);
 }
 
 function highlightModel(){
 	if(highlight === false){
 		highlight = true;
-		loadedModel.material.emissive.setHex(0xFF0000);
+		loadedModelObj.children[0].material.emissive.setHex(0xFF0000);
 	} else {
 		highlight = false;
-		loadedModel.material.emissive.setHex(0x000000);
+		loadedModelObj.children[0].material.emissive.setHex(0x000000);
 	}
-	console.log("highlight foo - " + highlight);
+	//console.log("highlight foo - " + highlight);
 }
 
 init();
