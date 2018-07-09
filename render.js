@@ -28,7 +28,7 @@ function init(){
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	document.body.appendChild( renderer.domElement );
 
-	controls = new THREE.OrbitControls( camera );
+	controls = new THREE.OrbitControls( camera, renderer.domElement );
 	controls.enablePan = false;
 	controls.target.set( 0, 0, 0 );
 	controls.maxDistance = 8;

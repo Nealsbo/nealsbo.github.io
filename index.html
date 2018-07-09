@@ -11,7 +11,7 @@
 				margin: 0px;
 				overflow: hidden;
 			}
-			select {
+			pet-select {
 				font-size:18px;
 			}
 			.button {
@@ -28,15 +28,12 @@
 	</head>
 	<body>
 		<div id="body">
-			<select id="pet-select">
-    <option value="dog">Dog</option>
-    <option value="cat">Cat</option>
-    <option value="hamster">Hamster</option>
-    <option value="parrot">Parrot</option>
-    <option value="spider">Spider</option>
-    <option value="goldfish">Goldfish</option>
-    <option value="none" selected>--Please choose an option--</option>
-</select>
+			<select id="pet-select" onchange="loadModel(this.value)">
+				<option value="cat">Cat</option>
+				<option value="dog">Dog</option>
+				<option value="fish">Fish</option>
+				<option value="parrot">Parrot</option>
+			</select>
 		
 			<button class="button" onclick="loadModel('cat')"    type="submit">Cat</button>
 			<button class="button" onclick="loadModel('dog')"    type="submit">Dog</button>
